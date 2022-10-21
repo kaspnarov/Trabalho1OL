@@ -3,42 +3,30 @@ from ortools.linear_solver import pywraplp
 # Instancia um solver Glop.
 solver = pywraplp.Solver.CreateSolver('GLOP')
 
-# Cria as variáveis que terão qualquer valor não-negativo.
-S1 = solver.NumVar(0, solver.infinity() , 'S1')
-S2 = solver.NumVar(0, solver.infinity() , 'S2')
-S3 = solver.NumVar(0, solver.infinity() , 'S3')
 
-G1 = solver.NumVar(0, solver.infinity() , 'G1')
-G2 = solver.NumVar(0, solver.infinity() , 'G2')
-G3 = solver.NumVar(0, solver.infinity() , 'G3')
-
-R1 = solver.NumVar(0, solver.infinity() , 'R1')
-R2 = solver.NumVar(0, solver.infinity() , 'R2')
-R3 = solver.NumVar(0, solver.infinity() , 'R3')
+# Cria as variáveis que terão qualquer valor entre 5000 e 40000, inclusive.
+a = solver.NumVar(5000, 40000, 'a')
+b = solver.NumVar(5000, 40000, 'b')
+c = solver.NumVar(5000, 40000, 'c')
+d = solver.NumVar(5000, 40000, 'd')
+e = solver.NumVar(5000, 40000, 'e')
+f = solver.NumVar(5000, 40000, 'f')
 
 # Equações de restrição:
-solver.Add(S1 + S2 + S3 == 2500000)
-solver.Add(G1 + G2 + G3 == 1000000)
-solver.Add(R1 + R2 + R3 == 1700000)
+solver.Add(a + b + c + d + e + f == 100000)
+solver.Add(b + c + e + f == 50000)
+solver.Add(a + b + c <= 30000)
 
-solver.Add(S1 + G1 + R1 <= 3000000)
-solver.Add(S2 + G2 + R2 <= 3000000)
-solver.Add(S3 + G3 + R3 <= 3000000)
-
-# Função objetivo.
-solver.Minimize(8*((S1 * 0.05)/(1-((1+0.05)**(-8))) + (S2 * 0.052)/(1-((1+0.052)**(-8))) + (S3 * 0.055)/(1-((1+0.055)**(-8))) + 
-                (G1 * 0.065)/(1-((1+0.065)**(-8))) + (G2 * 0.062)/(1-((1+0.062)**(-8))) + (G3 * 0.058)/(1-((1+0.058)**(-8))) + 
-                (R1 * 0.061)/(1-((1+0.061)**(-8))) + (R2 * 0.062)/(1-((1+0.062)**(-8))) + (R3 * 0.065)/(1-((1+0.065)**(-8)))))
+# Função objetivo:
+solver.Maximize(0.053 * a + 0.062 * b + 0.051 * c + 0.049 * d + 0.065 * e + 0.034 * f)
 
 # Resolve o sistema.
 solver.Solve()
 
 # Mostra os resultados.
 print('Solution:')
-print('z = %.2f' % solver.Objective().Value())
+print('z =', solver.Objective().Value())
+print(' ̲ ̲ ̲ ̲ ̲a̲ ̲ ̲ ̲ ̲|̲ ̲ ̲ ̲b ̲ ̲ ̲ ̲|̲ ̲ ̲ ̲c ̲ ̲ ̲ ̲|̲ ̲ ̲ ̲ ̲d ̲ ̲ ̲ ̲|̲ ̲ ̲ ̲ ̲e ̲ ̲ ̲ ̲|̲ ̲ ̲ ̲f ̲ ̲ ̲ ̲')
+print(' ', a.solution_value(), '|', b.solution_value(), '|', c.solution_value(), '|', d.solution_value(), '|', e.solution_value(), '|', f.solution_value())
 
-print(' ̲ ̲|̲____S̲_____|̲____G̲____|̲____R̲____')
-print('1 |  %d |    %d    | %d' % (S1.solution_value(), G1.solution_value(), R1.solution_value()))
-print('2 |     %d    |    %d    | %d' % (S2.solution_value(), G2.solution_value(), R2.solution_value()))
-print('3 |     %d    | %d |    %d' % (S3.solution_value(), G3.solution_value(), R3.solution_value()))
-    
+
