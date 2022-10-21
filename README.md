@@ -1,7 +1,5 @@
 # Como rodar
 
-O código pode ser executado duas formas:
-
 ## Local
 
 Para rodar o código localmente, siga o passo a passo:
