@@ -1,7 +1,5 @@
 # Como rodar
 
-## Local
-
 Para rodar o código localmente, siga o passo a passo:
 1. Ter python 3 instalado. 
 2. Instalar pip
